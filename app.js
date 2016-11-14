@@ -13,6 +13,8 @@
   function LunchCheckController($scope) {
     $scope.message = "";
     $scope.dishes = "";
+    $scope.messageStyle = {};
+    $scope.textboxStyle = {};
 
     $scope.checkIfTooMuch = function () {
       var dishesCount = 0;
@@ -31,22 +33,37 @@
 
       console.log('DISH COUNT W/O BLANKS: ' + dishesCount);
 
-      $scope.message = getReturnMessage(dishesCount);
-      
+      // -----------------------
+      // changes to apply
+
+      var changesToApply = getChangesToApply(dishesCount);
+
+      $scope.message = changesToApply.statusMessage;
+      $scope.messageStyle = {"color":changesToApply.textColor};
+      $scope.textboxStyle = {"border-color":changesToApply.borderColor};
+
     };
 
-    function getReturnMessage(dishesCount) {
-      var returnMessage = "";
+    function getChangesToApply(dishesCount) {
+      var retobject = new retValObj("green", "green", "-");
 
       if (dishesCount == 0) {
-        returnMessage = "Please enter data first";
+        retobject.borderColor = "red";
+        retobject.textColor = "red";
+        retobject.statusMessage = "Please enter data first";
       } else if (dishesCount <= 3) {
-        returnMessage = "Enjoy!";
+        retobject.statusMessage = "Enjoy!";
       } else {
-        returnMessage = "Too much!";
+        retobject.statusMessage = "Too much!";
       }
 
-      return returnMessage;
+      return retobject;
+    };
+
+    function retValObj(borderColor, textColor, statusMessage) {
+      this.borderColor = borderColor;
+      this.textColor = textColor;
+      this.statusMessage = statusMessage;
     };
   }
 
